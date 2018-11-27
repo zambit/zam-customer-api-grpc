@@ -3,12 +3,35 @@ package endpoints
 import (
 	"context"
 
-	"github.com/go-kit/kit/endpoint"
-
+	"git.zam.io/microservices/customer-api/models"
 	"git.zam.io/microservices/customer-api/service/service"
+	"github.com/go-kit/kit/endpoint"
 )
 
-func makeHealthEndpoint(i service.CustomerAPIService) endpoint.Endpoint {
+type HealthRequest struct {
+}
+
+type HealthResponse struct {
+	Ok bool
+}
+
+type LoadByPhoneRequest struct {
+	Phone string
+}
+type LoadByPhoneResponse struct {
+	Customer models.Customer
+}
+
+type CreateRequest struct {
+	Customer models.Customer
+}
+
+type CreateResponse struct {
+	Customer models.Customer
+	Err      error
+}
+
+func makeHealthEndpoint(i service.ICustomerAPIService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		_ = request.(HealthRequest)
 		b := i.Health()
@@ -16,23 +39,32 @@ func makeHealthEndpoint(i service.CustomerAPIService) endpoint.Endpoint {
 	}
 }
 
-func makeLoadByIDEndpoint(i service.CustomerAPIService) endpoint.Endpoint {
+type LoadByIDRequest struct {
+	Id uint64
+}
+
+type LoadByIDResponse struct {
+	Customer models.Customer
+	Err      error
+}
+
+func makeLoadByIDEndpoint(i service.ICustomerAPIService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(LoadByIDRequest)
-		C := i.LoadByID(req.Id)
-		return LoadByIDResponse{Customer: *C}, nil
+		C, err := i.LoadByID(req.Id)
+		return LoadByIDResponse{Customer: *C}, err
 	}
 }
 
-func makeLoadByPhoneEndpoint(i service.CustomerAPIService) endpoint.Endpoint {
+func makeLoadByPhoneEndpoint(i service.ICustomerAPIService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(LoadByPhoneRequest)
-		C := i.LoadByPhone(req.Phone)
-		return LoadByPhoneResponse{Customer: *C}, nil
+		C, err := i.LoadByPhone(req.Phone)
+		return LoadByPhoneResponse{Customer: *C}, err
 	}
 }
 
-func makeCreateEndpoint(i service.CustomerAPIService) endpoint.Endpoint {
+func makeCreateEndpoint(i service.ICustomerAPIService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(CreateRequest)
 		C, err := i.Create(&req.Customer)
@@ -47,7 +79,7 @@ type Endpoints struct {
 	Create      endpoint.Endpoint
 }
 
-func MakeServerEndpoints(s service.CustomerAPIService) Endpoints {
+func MakeServerEndpoints(s *service.CustomerAPIService) Endpoints {
 	return Endpoints{
 		Health:      makeHealthEndpoint(s),
 		LoadByID:    makeLoadByIDEndpoint(s),

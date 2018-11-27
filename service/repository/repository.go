@@ -11,15 +11,15 @@ type IRepository interface {
 	LoadByPhone(email string, buf *models.Customer) error
 }
 
-var _ IRepository = (repository)(nil)
+var _ IRepository = (*Repository)(nil)
 
-type repository struct{}
+type Repository struct{}
 
-func (repository) Create(customer *models.Customer) (uint64, error) {
-
+func (Repository) Create(customer *models.Customer) (uint64, error) {
+	return 0, nil
 }
 
-func (repository) LoadByID(id uint64, buf *models.Customer) error {
+func (Repository) LoadByID(id uint64, buf *models.Customer) error {
 	buf.ID = id
 	err := db.DB().Model(&buf).Select()
 	if err != nil {
@@ -28,7 +28,7 @@ func (repository) LoadByID(id uint64, buf *models.Customer) error {
 	return nil
 }
 
-func (repository) LoadByPhone(phone string, buf *models.Customer) error {
+func (Repository) LoadByPhone(phone string, buf *models.Customer) error {
 	buf.Phone = phone
 	err := db.DB().Model(&buf).Select()
 	if err != nil {

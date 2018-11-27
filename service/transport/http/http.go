@@ -6,15 +6,17 @@ import (
 	"net/http"
 
 	"git.zam.io/microservices/customer-api/service/endpoints"
+	"github.com/go-chi/chi"
 	httptransport "github.com/go-kit/kit/transport/http"
 )
 
 func NewHTTPHandler(endpoints endpoints.Endpoints) http.Handler {
-	m := http.NewServeMux()
-	m.Handle("/health", httptransport.NewServer(endpoints.Health, DecodeHealthRequest, EncodeHealthResponse))
-	m.Handle("/loadbyid", httptransport.NewServer(endpoints.LoadByID, DecodeLoadByIDRequest, EncodeLoadByIDResponse))
-	m.Handle("/loadbyphone", httptransport.NewServer(endpoints.LoadByPhone, DecodeLoadByPhoneRequest, EncodeLoadByPhoneResponse))
-	m.Handle("/create", httptransport.NewServer(endpoints.Create, DecodeCreateRequest, EncodeCreateResponse))
+	m := chi.NewMux()
+	m.Method(http.MethodGet, "/health", httptransport.NewServer(endpoints.Health, DecodeHealthRequest, EncodeHealthResponse))
+	m.Method(http.MethodPost, "/load-by-id", httptransport.NewServer(endpoints.LoadByID, DecodeLoadByIDRequest, EncodeLoadByIDResponse))
+	m.Method(http.MethodPost, "/loadbyphone", httptransport.NewServer(endpoints.LoadByPhone, DecodeLoadByPhoneRequest, EncodeLoadByPhoneResponse))
+	m.Method(http.MethodPost, "/create", httptransport.NewServer(endpoints.Create, DecodeCreateRequest, EncodeCreateResponse))
+
 	return m
 }
 

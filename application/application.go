@@ -3,17 +3,21 @@ package application
 import (
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 
+	"git.zam.io/microservices/customer-api/pkg/config"
 	"git.zam.io/microservices/customer-api/service/endpoints"
-	http2 "git.zam.io/microservices/customer-api/service/http"
 	"git.zam.io/microservices/customer-api/service/sd"
 	"git.zam.io/microservices/customer-api/service/service"
+	httptransport "git.zam.io/microservices/customer-api/service/transport/http"
 	"github.com/go-kit/kit/sd/consul"
 )
 
 type Application struct {
 	server *http.Server
-	sd     consul.Registrar
+	sd     *consul.Registrar
 }
 
 func New() (*Application, error) {
@@ -27,14 +31,27 @@ func New() (*Application, error) {
 
 func (app *Application) init() error {
 	app.server = &http.Server{}
-	registar := sd.ConsulRegister()
-	registar.Register()
+	reg := sd.ConsulRegister()
+	app.sd = reg.(*consul.Registrar)
+	app.sd.Register()
 	return nil
 }
 
 func (app *Application) Run() error {
-	h := http2.NewHTTPHandler(endpoints.MakeServerEndpoints(service.CustomerAPIService{}))
+	h := httptransport.NewHTTPHandler(endpoints.MakeServerEndpoints(&service.CustomerAPIService{}))
 
-	log.Fatal(http.ListenAndServe(":3000", h))
+	go func() {
+		log.Fatal(http.ListenAndServe(config.Config().GetString("application.host")+":"+config.Config().GetString("application.http.port"), h))
+	}()
+
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+	<-sigs
+	app.shutdown()
+
 	return nil
+}
+
+func (app *Application) shutdown() {
+	app.sd.Deregister()
 }
