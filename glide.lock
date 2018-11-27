@@ -1,0 +1,105 @@
+hash: edf90fe51b7aea16a74b85c3fa2f6732537430d3697ae352fa3db210026ab1f7
+updated: 2018-11-27T12:22:16.972013672+03:00
+imports:
+  - name: github.com/armon/go-metrics
+    version: f0300d1749da6fa982027e449ec0c7a145510c3c
+  - name: github.com/fsnotify/fsnotify
+    version: ccc981bf80385c528a65fbfdd49bf2d8da22aa23
+  - name: github.com/go-chi/chi
+    version: b5294d10673813fac8558e7f47242bc9e61b4c25
+  - name: github.com/go-kit/kit
+    version: 12210fb6ace19e0496167bb3e667dcd91fa9f69b
+    subpackages:
+      - endpoint
+      - log
+      - sd
+      - sd/consul
+      - sd/internal/instance
+      - transport/http
+      - util/conn
+  - name: github.com/go-logfmt/logfmt
+    version: 07c9b44f60d7ffdfb7d8efe1ad539965737836dc
+  - name: github.com/go-pg/pg
+    version: ae5d5e7df4b2e598390e10b66b849c6af94f092b
+    subpackages:
+      - internal
+      - internal/parser
+      - internal/pool
+      - orm
+      - types
+  - name: github.com/golang/protobuf
+    version: 882cf97a83ad205fd22af574246a3bc647d7a7d2
+    subpackages:
+      - proto
+  - name: github.com/hashicorp/consul
+    version: 0bddfa23a2ebe3c0773d917fc104f53d74f7a5ec
+    subpackages:
+      - api
+  - name: github.com/hashicorp/go-cleanhttp
+    version: e8ab9daed8d1ddd2d3c4efba338fe2eeae2e4f18
+  - name: github.com/hashicorp/go-immutable-radix
+    version: 27df80928bb34bb1b0d6d0e01b9e679902e7a6b5
+  - name: github.com/hashicorp/go-rootcerts
+    version: 6bb64b370b90e7ef1fa532be9e591a81c3493e00
+  - name: github.com/hashicorp/golang-lru
+    version: 20f1fb78b0740ba8c3cb143a61e86ba5c8669768
+    subpackages:
+      - simplelru
+  - name: github.com/hashicorp/hcl
+    version: 65a6292f0157eff210d03ed1bf6c59b190b8b906
+    subpackages:
+      - hcl/ast
+      - hcl/parser
+      - hcl/printer
+      - hcl/scanner
+      - hcl/strconv
+      - hcl/token
+      - json/parser
+      - json/scanner
+      - json/token
+  - name: github.com/hashicorp/serf
+    version: 4a3a10ccd1b09be9af798006fc9c85827b5f2ba6
+    subpackages:
+      - coordinate
+  - name: github.com/jinzhu/inflection
+    version: 04140366298a54a039076d798123ffa108fff46c
+  - name: github.com/kr/logfmt
+    version: b84e30acd515aadc4b783ad4ff83aff3299bdfe0
+  - name: github.com/magiconair/properties
+    version: 7c38529aac7222391b7a2661365177a97e21b998
+  - name: github.com/mitchellh/go-homedir
+    version: ae18d6b8b3205b561c79e8e5f69bff09736185f4
+  - name: github.com/mitchellh/mapstructure
+    version: fa473d140ef3c6adf42d6b391fe76707f1f243c8
+  - name: github.com/pelletier/go-toml
+    version: 27c6b39a135b7dc87a14afb068809132fb7a9a8f
+  - name: github.com/spf13/afero
+    version: d40851caa0d747393da1ffb28f7f9d8b4eeffebd
+    subpackages:
+      - mem
+  - name: github.com/spf13/cast
+    version: 8c9545af88b134710ab1cd196795e7f2388358d7
+  - name: github.com/spf13/jwalterweatherman
+    version: 94f6ae3ed3bceceafa716478c5fbf8d29ca601a1
+  - name: github.com/spf13/pflag
+    version: aea12ed6721610dc6ed40141676d7ab0a1dac9e9
+  - name: github.com/spf13/viper
+    version: 2c12c60302a5a0e62ee102ca9bc996277c2f64f5
+  - name: golang.org/x/crypto
+    version: e657309f52e71501f9934566ac06dc5c2f7f11a1
+    subpackages:
+      - pbkdf2
+  - name: golang.org/x/sys
+    version: 62eef0e2fa9b2c385f7b2778e763486da6880d37
+    subpackages:
+      - unix
+  - name: golang.org/x/text
+    version: 6f44c5a2ea40ee3593d98cdcc905cc1fdaa660e2
+    subpackages:
+      - transform
+      - unicode/norm
+  - name: gopkg.in/yaml.v2
+    version: 5420a8b6744d3b0345ab293f6fcba19c978f1183
+  - name: mellium.im/sasl
+    version: 80f447d8107c05f712682c349a26e081488de60c
+testImports: []

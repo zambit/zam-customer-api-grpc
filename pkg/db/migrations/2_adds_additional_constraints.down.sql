@@ -1,0 +1,1 @@
+drop index customer_phone_idx;

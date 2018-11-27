@@ -1,0 +1,19 @@
+syntax = "proto3";
+package pb;
+
+message LoadByIDRequest {
+    uint64 id = 1;
+}
+
+message LoadByEmailRequest {
+    string email = 1;
+}
+
+message LoadCustomerResponse {
+    uint64 id = 1;
+}
+
+service CustomerAPIService {
+    rpc LoadByID (LoadByIDRequest) returns (LoadCustomerResponse);
+    rpc LoadByEmail (LoadByEmailRequest) returns (LoadCustomerResponse);
+}
