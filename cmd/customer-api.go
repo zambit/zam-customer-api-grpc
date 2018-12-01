@@ -1,14 +1,15 @@
 package main
 
-import "git.zam.io/microservices/customer-api/application"
+import (
+	"log"
+
+	"git.zam.io/microservices/customer-api/service"
+)
 
 func main() {
-	app, err := application.New()
+	app, err := service.New()
 	if err != nil {
-		panic(err)
+		log.Fatal()
 	}
-	err = app.Run()
-	if err != nil {
-		panic(err)
-	}
+	app.Run()
 }

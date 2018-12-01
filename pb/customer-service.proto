@@ -1,6 +1,8 @@
 syntax = "proto3";
 package pb;
 
+import "google/protobuf/timestamp.proto";
+
 message LoadByIDRequest {
     uint64 id = 1;
 }
@@ -11,9 +13,26 @@ message LoadByEmailRequest {
 
 message LoadCustomerResponse {
     uint64 id = 1;
+    string phone = 2;
+    google.protobuf.Timestamp registereg_at = 3;
+    int32 status_id = 4;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+}
+
+message NewCustomerRequest {
+    string phone = 1;
+    string password = 2;
+    int32 status_id = 3;
+}
+
+message Error {
+    string error = 1;
 }
 
 service CustomerAPIService {
+    rpc Create (NewCustomerRequest) returns (Error);
     rpc LoadByID (LoadByIDRequest) returns (LoadCustomerResponse);
     rpc LoadByEmail (LoadByEmailRequest) returns (LoadCustomerResponse);
+
 }

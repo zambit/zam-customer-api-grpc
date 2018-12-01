@@ -1,5 +1,5 @@
-hash: edf90fe51b7aea16a74b85c3fa2f6732537430d3697ae352fa3db210026ab1f7
-updated: 2018-11-27T12:22:16.972013672+03:00
+hash: 2fd30d8e0e72ad5cbf42764c7c32e69e575236e0f4906fd7753627418e00e9a6
+updated: 2018-12-01T19:02:45.725118516+03:00
 imports:
   - name: github.com/armon/go-metrics
     version: f0300d1749da6fa982027e449ec0c7a145510c3c
@@ -28,7 +28,7 @@ imports:
       - orm
       - types
   - name: github.com/golang/protobuf
-    version: 882cf97a83ad205fd22af574246a3bc647d7a7d2
+    version: 1d3f30b51784bec5aad268e59fd3c2fc1c2fe73f
     subpackages:
       - proto
   - name: github.com/hashicorp/consul
@@ -73,6 +73,8 @@ imports:
     version: fa473d140ef3c6adf42d6b391fe76707f1f243c8
   - name: github.com/pelletier/go-toml
     version: 27c6b39a135b7dc87a14afb068809132fb7a9a8f
+  - name: github.com/satori/go.uuid
+    version: f58768cc1a7a7e77a3bd49e98cdd21419399b6a3
   - name: github.com/spf13/afero
     version: d40851caa0d747393da1ffb28f7f9d8b4eeffebd
     subpackages:
@@ -86,11 +88,13 @@ imports:
   - name: github.com/spf13/viper
     version: 2c12c60302a5a0e62ee102ca9bc996277c2f64f5
   - name: golang.org/x/crypto
-    version: e657309f52e71501f9934566ac06dc5c2f7f11a1
+    version: eb0de9b17e854e9b1ccd9963efafc79862359959
     subpackages:
+      - bcrypt
+      - blowfish
       - pbkdf2
   - name: golang.org/x/sys
-    version: 62eef0e2fa9b2c385f7b2778e763486da6880d37
+    version: 4ed8d59d0b35e1e29334a206d1b3f38b1e5dfb31
     subpackages:
       - unix
   - name: golang.org/x/text
@@ -98,8 +102,10 @@ imports:
     subpackages:
       - transform
       - unicode/norm
+  - name: google.golang.org/grpc
+    version: 2e463a05d100327ca47ac218281906921038fd95
   - name: gopkg.in/yaml.v2
-    version: 5420a8b6744d3b0345ab293f6fcba19c978f1183
+    version: 51d6538a90f86fe93ac480b35f37b2be17fef232
   - name: mellium.im/sasl
     version: 80f447d8107c05f712682c349a26e081488de60c
 testImports: []

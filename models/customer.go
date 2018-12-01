@@ -1,12 +1,14 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type Customer struct {
-	tableName    struct{}  `sql:"users"`
+	tableName    struct{}  `sql:"customers"`
 	ID           uint64    `json:"id"`
 	Phone        string    `json:"phone"`
-	Password     string    `json:"password"`
+	Password     string    `json:"-"`
 	RegisteredAt time.Time `json:"registered_at"`
 	ReferrerID   uint64    `json:"referrer_id"`
 	StatusID     uint64    `json:"status_id"`
