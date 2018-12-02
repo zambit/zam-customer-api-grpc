@@ -18,7 +18,7 @@ type HealthResponse struct {
 func makeHealthEndpoint(i ICustomerAPIService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		_ = request.(HealthRequest)
-		b := i.Health()
+		b := i.Health(ctx)
 		return HealthResponse{Ok: b}, nil
 	}
 }
@@ -35,7 +35,7 @@ type LoadByIDResponse struct {
 func makeLoadByIDEndpoint(i ICustomerAPIService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(LoadByIDRequest)
-		C, err := i.LoadByID(req.ID)
+		C, err := i.LoadByID(ctx, req.ID)
 		return LoadByIDResponse{Customer: *C}, err
 	}
 }
@@ -50,7 +50,7 @@ type LoadByPhoneResponse struct {
 func makeLoadByPhoneEndpoint(i ICustomerAPIService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(LoadByPhoneRequest)
-		C, err := i.LoadByPhone(req.Phone)
+		C, err := i.LoadByPhone(ctx, req.Phone)
 		return LoadByPhoneResponse{Customer: *C}, err
 	}
 }
@@ -71,7 +71,7 @@ func makeCreateEndpoint(i ICustomerAPIService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(CreateRequest)
 		c := &models.Customer{}
-		err := i.Create(&req, c)
+		err := i.Create(ctx, &req, c)
 		return CreateResponse{Customer: *c, Error: err}, err
 	}
 }
@@ -89,16 +89,16 @@ type LoginResponse struct {
 func makeLoginEndpoint(i ICustomerAPIService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(LoginRequest)
-		c, err := i.Login(req.Phone, req.Password)
+		c, err := i.Login(ctx, req.Phone, req.Password)
 		return CreateResponse{Customer: *c, Error: err}, err
 	}
 }
 
 type Endpoints struct {
-	Health      endpoint.Endpoint
-	LoadByID    endpoint.Endpoint
-	LoadByPhone endpoint.Endpoint
-	Create      endpoint.Endpoint
+	Health      *endpoint.Endpoint
+	LoadByID    *endpoint.Endpoint
+	LoadByPhone *endpoint.Endpoint
+	Create      *endpoint.Endpoint
 	Login       endpoint.Endpoint
 }
 

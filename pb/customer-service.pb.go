@@ -21,7 +21,7 @@ var _ = math.Inf
 // is compatible with the proto package it is being compiled against.
 // A compilation error at this line likely means your copy of the
 // proto package needs to be updated.
-const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 type LoadByIDRequest struct {
 	Id                   uint64   `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -62,41 +62,41 @@ func (m *LoadByIDRequest) GetId() uint64 {
 	return 0
 }
 
-type LoadByEmailRequest struct {
-	Email                string   `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+type LoadByPhoneRequest struct {
+	Phone                string   `protobuf:"bytes,1,opt,name=phone,proto3" json:"phone,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *LoadByEmailRequest) Reset()         { *m = LoadByEmailRequest{} }
-func (m *LoadByEmailRequest) String() string { return proto.CompactTextString(m) }
-func (*LoadByEmailRequest) ProtoMessage()    {}
-func (*LoadByEmailRequest) Descriptor() ([]byte, []int) {
+func (m *LoadByPhoneRequest) Reset()         { *m = LoadByPhoneRequest{} }
+func (m *LoadByPhoneRequest) String() string { return proto.CompactTextString(m) }
+func (*LoadByPhoneRequest) ProtoMessage()    {}
+func (*LoadByPhoneRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_e11e6f9e510dc23e, []int{1}
 }
 
-func (m *LoadByEmailRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_LoadByEmailRequest.Unmarshal(m, b)
+func (m *LoadByPhoneRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_LoadByPhoneRequest.Unmarshal(m, b)
 }
-func (m *LoadByEmailRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_LoadByEmailRequest.Marshal(b, m, deterministic)
+func (m *LoadByPhoneRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_LoadByPhoneRequest.Marshal(b, m, deterministic)
 }
-func (m *LoadByEmailRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_LoadByEmailRequest.Merge(m, src)
+func (m *LoadByPhoneRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_LoadByPhoneRequest.Merge(m, src)
 }
-func (m *LoadByEmailRequest) XXX_Size() int {
-	return xxx_messageInfo_LoadByEmailRequest.Size(m)
+func (m *LoadByPhoneRequest) XXX_Size() int {
+	return xxx_messageInfo_LoadByPhoneRequest.Size(m)
 }
-func (m *LoadByEmailRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_LoadByEmailRequest.DiscardUnknown(m)
+func (m *LoadByPhoneRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_LoadByPhoneRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_LoadByEmailRequest proto.InternalMessageInfo
+var xxx_messageInfo_LoadByPhoneRequest proto.InternalMessageInfo
 
-func (m *LoadByEmailRequest) GetEmail() string {
+func (m *LoadByPhoneRequest) GetPhone() string {
 	if m != nil {
-		return m.Email
+		return m.Phone
 	}
 	return ""
 }
@@ -105,9 +105,10 @@ type LoadCustomerResponse struct {
 	Id                   uint64               `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Phone                string               `protobuf:"bytes,2,opt,name=phone,proto3" json:"phone,omitempty"`
 	RegisteregAt         *timestamp.Timestamp `protobuf:"bytes,3,opt,name=registereg_at,json=registeregAt,proto3" json:"registereg_at,omitempty"`
-	StatusId             int32                `protobuf:"varint,4,opt,name=status_id,json=statusId,proto3" json:"status_id,omitempty"`
-	CreatedAt            *timestamp.Timestamp `protobuf:"bytes,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt            *timestamp.Timestamp `protobuf:"bytes,6,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	StatusId             uint64               `protobuf:"varint,4,opt,name=status_id,json=statusId,proto3" json:"status_id,omitempty"`
+	ReferrerId           uint64               `protobuf:"varint,5,opt,name=referrer_id,json=referrerId,proto3" json:"referrer_id,omitempty"`
+	CreatedAt            *timestamp.Timestamp `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt            *timestamp.Timestamp `protobuf:"bytes,7,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
 	XXX_unrecognized     []byte               `json:"-"`
 	XXX_sizecache        int32                `json:"-"`
@@ -159,9 +160,16 @@ func (m *LoadCustomerResponse) GetRegisteregAt() *timestamp.Timestamp {
 	return nil
 }
 
-func (m *LoadCustomerResponse) GetStatusId() int32 {
+func (m *LoadCustomerResponse) GetStatusId() uint64 {
 	if m != nil {
 		return m.StatusId
+	}
+	return 0
+}
+
+func (m *LoadCustomerResponse) GetReferrerId() uint64 {
+	if m != nil {
+		return m.ReferrerId
 	}
 	return 0
 }
@@ -183,7 +191,8 @@ func (m *LoadCustomerResponse) GetUpdatedAt() *timestamp.Timestamp {
 type NewCustomerRequest struct {
 	Phone                string   `protobuf:"bytes,1,opt,name=phone,proto3" json:"phone,omitempty"`
 	Password             string   `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
-	StatusId             int32    `protobuf:"varint,3,opt,name=status_id,json=statusId,proto3" json:"status_id,omitempty"`
+	StatusId             int64    `protobuf:"varint,3,opt,name=status_id,json=statusId,proto3" json:"status_id,omitempty"`
+	ReferrerId           int64    `protobuf:"varint,4,opt,name=referrer_id,json=referrerId,proto3" json:"referrer_id,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -228,9 +237,16 @@ func (m *NewCustomerRequest) GetPassword() string {
 	return ""
 }
 
-func (m *NewCustomerRequest) GetStatusId() int32 {
+func (m *NewCustomerRequest) GetStatusId() int64 {
 	if m != nil {
 		return m.StatusId
+	}
+	return 0
+}
+
+func (m *NewCustomerRequest) GetReferrerId() int64 {
+	if m != nil {
+		return m.ReferrerId
 	}
 	return 0
 }
@@ -274,42 +290,93 @@ func (m *Error) GetError() string {
 	return ""
 }
 
+type LoginRequest struct {
+	Phone                string   `protobuf:"bytes,1,opt,name=phone,proto3" json:"phone,omitempty"`
+	Password             string   `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *LoginRequest) Reset()         { *m = LoginRequest{} }
+func (m *LoginRequest) String() string { return proto.CompactTextString(m) }
+func (*LoginRequest) ProtoMessage()    {}
+func (*LoginRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_e11e6f9e510dc23e, []int{5}
+}
+
+func (m *LoginRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_LoginRequest.Unmarshal(m, b)
+}
+func (m *LoginRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_LoginRequest.Marshal(b, m, deterministic)
+}
+func (m *LoginRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_LoginRequest.Merge(m, src)
+}
+func (m *LoginRequest) XXX_Size() int {
+	return xxx_messageInfo_LoginRequest.Size(m)
+}
+func (m *LoginRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_LoginRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_LoginRequest proto.InternalMessageInfo
+
+func (m *LoginRequest) GetPhone() string {
+	if m != nil {
+		return m.Phone
+	}
+	return ""
+}
+
+func (m *LoginRequest) GetPassword() string {
+	if m != nil {
+		return m.Password
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterType((*LoadByIDRequest)(nil), "pb.LoadByIDRequest")
-	proto.RegisterType((*LoadByEmailRequest)(nil), "pb.LoadByEmailRequest")
+	proto.RegisterType((*LoadByPhoneRequest)(nil), "pb.LoadByPhoneRequest")
 	proto.RegisterType((*LoadCustomerResponse)(nil), "pb.LoadCustomerResponse")
 	proto.RegisterType((*NewCustomerRequest)(nil), "pb.NewCustomerRequest")
 	proto.RegisterType((*Error)(nil), "pb.Error")
+	proto.RegisterType((*LoginRequest)(nil), "pb.LoginRequest")
 }
 
 func init() { proto.RegisterFile("customer-service.proto", fileDescriptor_e11e6f9e510dc23e) }
 
 var fileDescriptor_e11e6f9e510dc23e = []byte{
-	// 379 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x52, 0x5d, 0x8b, 0xda, 0x40,
-	0x14, 0x25, 0xd1, 0x88, 0xb9, 0xf6, 0x03, 0xa6, 0x22, 0x21, 0xa5, 0xd4, 0xe6, 0x49, 0x5a, 0x1a,
-	0xc1, 0x3e, 0xf9, 0x24, 0xa9, 0xf5, 0x41, 0x28, 0xa5, 0xa4, 0x7d, 0x97, 0x24, 0x73, 0x9b, 0x06,
-	0x8c, 0x33, 0x3b, 0x33, 0x59, 0xd9, 0x7f, 0xb1, 0x7f, 0x68, 0xff, 0xdb, 0x32, 0x99, 0xc4, 0x4f,
-	0x16, 0xdf, 0x72, 0x0f, 0xe7, 0x9c, 0xcc, 0xb9, 0xf7, 0xc0, 0x28, 0xab, 0xa4, 0x62, 0x25, 0x8a,
-	0xaf, 0x12, 0xc5, 0x7d, 0x91, 0x61, 0xc8, 0x05, 0x53, 0x8c, 0xd8, 0x3c, 0xf5, 0x3f, 0xe6, 0x8c,
-	0xe5, 0x5b, 0x9c, 0xd6, 0x48, 0x5a, 0xfd, 0x9b, 0xaa, 0xa2, 0x44, 0xa9, 0x92, 0x92, 0x1b, 0x52,
-	0xf0, 0x09, 0xde, 0xfe, 0x64, 0x09, 0xfd, 0xfe, 0xb0, 0xfe, 0x11, 0xe3, 0x5d, 0x85, 0x52, 0x91,
-	0x37, 0x60, 0x17, 0xd4, 0xb3, 0xc6, 0xd6, 0xa4, 0x1b, 0xdb, 0x05, 0x0d, 0x3e, 0x03, 0x31, 0x94,
-	0x55, 0x99, 0x14, 0xdb, 0x96, 0x35, 0x04, 0x07, 0xf5, 0x5c, 0x13, 0xdd, 0xd8, 0x0c, 0xc1, 0xa3,
-	0x0d, 0x43, 0x4d, 0x5e, 0x36, 0x4f, 0x8a, 0x51, 0x72, 0xb6, 0x93, 0x78, 0x69, 0xaa, 0xe5, 0xfc,
-	0x3f, 0xdb, 0xa1, 0x67, 0x1b, 0x79, 0x3d, 0x90, 0x05, 0xbc, 0x16, 0x98, 0x17, 0x52, 0xa1, 0xc0,
-	0x7c, 0x93, 0x28, 0xaf, 0x33, 0xb6, 0x26, 0x83, 0x99, 0x1f, 0x9a, 0x18, 0x61, 0x1b, 0x23, 0xfc,
-	0xdb, 0xc6, 0x88, 0x5f, 0x1d, 0x05, 0x91, 0x22, 0xef, 0xc1, 0x95, 0x2a, 0x51, 0x95, 0xdc, 0x14,
-	0xd4, 0xeb, 0x8e, 0xad, 0x89, 0x13, 0xf7, 0x0d, 0xb0, 0xa6, 0x64, 0x0e, 0x90, 0x09, 0x4c, 0x14,
-	0x52, 0x6d, 0xed, 0xdc, 0xb4, 0x76, 0x1b, 0x76, 0xa4, 0xb4, 0xb4, 0xe2, 0xb4, 0x95, 0xf6, 0x6e,
-	0x4b, 0x1b, 0x76, 0xa4, 0x82, 0x0c, 0xc8, 0x2f, 0xdc, 0x1f, 0x17, 0x72, 0x58, 0x9f, 0xc9, 0x6f,
-	0x9d, 0xe6, 0xf7, 0xa1, 0xcf, 0x13, 0x29, 0xf7, 0x4c, 0xd0, 0x66, 0x31, 0x87, 0xf9, 0x3c, 0x5a,
-	0xe7, 0x3c, 0x5a, 0xf0, 0x01, 0x9c, 0x95, 0x10, 0x4c, 0xd4, 0x67, 0xd1, 0x1f, 0x87, 0xb3, 0xe8,
-	0x61, 0xf6, 0x64, 0x01, 0x69, 0x5f, 0x10, 0xfd, 0x5e, 0xff, 0x31, 0x3d, 0x21, 0x5f, 0xa0, 0xb7,
-	0xac, 0x23, 0x92, 0x51, 0xc8, 0xd3, 0xf0, 0xfa, 0x99, 0xbe, 0xab, 0x71, 0xe3, 0x3c, 0x87, 0x7e,
-	0xdb, 0x14, 0xf2, 0x4e, 0xc3, 0x17, 0xbd, 0xf1, 0xbd, 0x16, 0xbc, 0x3a, 0xfe, 0x02, 0x06, 0x27,
-	0x0d, 0x32, 0x3f, 0xbb, 0xae, 0xd4, 0xcb, 0x06, 0x69, 0xaf, 0x5e, 0xf1, 0xb7, 0xe7, 0x00, 0x00,
-	0x00, 0xff, 0xff, 0x98, 0x4c, 0x34, 0x14, 0xeb, 0x02, 0x00, 0x00,
+	// 421 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x52, 0x5d, 0x8b, 0xd3, 0x40,
+	0x14, 0x35, 0xd9, 0xa6, 0xb6, 0xb7, 0xeb, 0x07, 0xe3, 0x52, 0x42, 0x44, 0x76, 0xcd, 0xd3, 0x22,
+	0x98, 0x85, 0x15, 0x1f, 0x44, 0x41, 0x63, 0x15, 0x09, 0x2c, 0x52, 0xa2, 0xef, 0x4b, 0xd2, 0xb9,
+	0x1b, 0x03, 0xb6, 0x33, 0xce, 0x4c, 0x2c, 0xbe, 0xfb, 0xea, 0x8f, 0xf1, 0x1f, 0xca, 0xcc, 0x64,
+	0x4c, 0xb4, 0x9a, 0xc2, 0xbe, 0xe5, 0xde, 0x7b, 0x4e, 0xce, 0x9c, 0xc3, 0x81, 0xf9, 0xaa, 0x91,
+	0x8a, 0xad, 0x51, 0x3c, 0x96, 0x28, 0xbe, 0xd6, 0x2b, 0x4c, 0xb8, 0x60, 0x8a, 0x11, 0x9f, 0x97,
+	0xd1, 0x71, 0xc5, 0x58, 0xf5, 0x19, 0xcf, 0xcc, 0xa6, 0x6c, 0xae, 0xce, 0x54, 0xbd, 0x46, 0xa9,
+	0x8a, 0x35, 0xb7, 0xa0, 0xf8, 0x21, 0xdc, 0xb9, 0x60, 0x05, 0x7d, 0xfd, 0x2d, 0x7b, 0x93, 0xe3,
+	0x97, 0x06, 0xa5, 0x22, 0xb7, 0xc1, 0xaf, 0x69, 0xe8, 0x9d, 0x78, 0xa7, 0xa3, 0xdc, 0xaf, 0x69,
+	0xfc, 0x08, 0x88, 0x85, 0x2c, 0x3f, 0xb1, 0x0d, 0x3a, 0xd4, 0x11, 0x04, 0x5c, 0xcf, 0x06, 0x38,
+	0xcd, 0xed, 0x10, 0xff, 0xf4, 0xe1, 0x48, 0x83, 0x17, 0xed, 0x93, 0x72, 0x94, 0x9c, 0x6d, 0x24,
+	0xfe, 0xfd, 0xd3, 0x8e, 0xee, 0xf7, 0xe8, 0xe4, 0x25, 0xdc, 0x12, 0x58, 0xd5, 0x52, 0xa1, 0xc0,
+	0xea, 0xb2, 0x50, 0xe1, 0xc1, 0x89, 0x77, 0x3a, 0x3b, 0x8f, 0x12, 0x6b, 0x23, 0x71, 0x36, 0x92,
+	0x8f, 0xce, 0x46, 0x7e, 0xd8, 0x11, 0x52, 0x45, 0xee, 0xc3, 0x54, 0xaa, 0x42, 0x35, 0xf2, 0xb2,
+	0xa6, 0xe1, 0xc8, 0xa8, 0x4d, 0xec, 0x22, 0xa3, 0xe4, 0x18, 0x66, 0x02, 0xaf, 0x50, 0x08, 0x14,
+	0xfa, 0x1c, 0x98, 0x33, 0xb8, 0x55, 0x46, 0xc9, 0x33, 0x80, 0x95, 0xc0, 0x42, 0x21, 0xd5, 0xda,
+	0xe3, 0xbd, 0xda, 0xd3, 0x16, 0x9d, 0x2a, 0x4d, 0x6d, 0x38, 0x75, 0xd4, 0x9b, 0xfb, 0xa9, 0x2d,
+	0x3a, 0x55, 0xf1, 0x77, 0x0f, 0xc8, 0x7b, 0xdc, 0x76, 0x91, 0x0d, 0x04, 0x4c, 0x22, 0x98, 0xf0,
+	0x42, 0xca, 0x2d, 0x13, 0xb4, 0x8d, 0xee, 0xf7, 0xfc, 0xa7, 0x79, 0x9d, 0xdc, 0xc1, 0xff, 0xcd,
+	0x8f, 0xcc, 0xb9, 0x67, 0x3e, 0x7e, 0x00, 0xc1, 0x5b, 0x21, 0x98, 0xd0, 0xc2, 0xa8, 0x3f, 0x9c,
+	0xb0, 0x19, 0xe2, 0x57, 0x70, 0x78, 0xc1, 0xaa, 0x7a, 0x73, 0xed, 0xe7, 0x9d, 0xff, 0xf0, 0x61,
+	0xee, 0x4c, 0xa6, 0xcb, 0xec, 0x83, 0x2d, 0xeb, 0xbb, 0x7c, 0xb9, 0x20, 0x2f, 0x60, 0xbc, 0x30,
+	0x51, 0x92, 0x79, 0xc2, 0xcb, 0x64, 0x37, 0x8d, 0x28, 0xd4, 0xfb, 0x7f, 0x35, 0x2b, 0xbe, 0x41,
+	0x9e, 0xc3, 0xc4, 0x75, 0x98, 0xdc, 0x73, 0xb8, 0x5e, 0xa3, 0x07, 0xc9, 0x29, 0xcc, 0x7a, 0xed,
+	0xb6, 0xfa, 0xbb, 0x75, 0x1f, 0xfc, 0xc5, 0x53, 0x08, 0x4c, 0x34, 0xe4, 0xae, 0x05, 0x75, 0x29,
+	0x0d, 0xd1, 0xca, 0xb1, 0xa9, 0xc5, 0x93, 0x5f, 0x01, 0x00, 0x00, 0xff, 0xff, 0xc6, 0xb0, 0xf7,
+	0x78, 0xc0, 0x03, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -320,130 +387,163 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// CustomerAPIServiceClient is the client API for CustomerAPIService service.
+// CustomerAPIServiceGRPCClient is the client API for CustomerAPIServiceGRPC service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type CustomerAPIServiceClient interface {
-	Create(ctx context.Context, in *NewCustomerRequest, opts ...grpc.CallOption) (*Error, error)
+type CustomerAPIServiceGRPCClient interface {
+	Create(ctx context.Context, in *NewCustomerRequest, opts ...grpc.CallOption) (*LoadCustomerResponse, error)
 	LoadByID(ctx context.Context, in *LoadByIDRequest, opts ...grpc.CallOption) (*LoadCustomerResponse, error)
-	LoadByEmail(ctx context.Context, in *LoadByEmailRequest, opts ...grpc.CallOption) (*LoadCustomerResponse, error)
+	LoadByPhone(ctx context.Context, in *LoadByPhoneRequest, opts ...grpc.CallOption) (*LoadCustomerResponse, error)
+	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoadCustomerResponse, error)
 }
 
-type customerAPIServiceClient struct {
+type customerAPIServiceGRPCClient struct {
 	cc *grpc.ClientConn
 }
 
-func NewCustomerAPIServiceClient(cc *grpc.ClientConn) CustomerAPIServiceClient {
-	return &customerAPIServiceClient{cc}
+func NewCustomerAPIServiceGRPCClient(cc *grpc.ClientConn) CustomerAPIServiceGRPCClient {
+	return &customerAPIServiceGRPCClient{cc}
 }
 
-func (c *customerAPIServiceClient) Create(ctx context.Context, in *NewCustomerRequest, opts ...grpc.CallOption) (*Error, error) {
-	out := new(Error)
-	err := c.cc.Invoke(ctx, "/pb.CustomerAPIService/Create", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *customerAPIServiceClient) LoadByID(ctx context.Context, in *LoadByIDRequest, opts ...grpc.CallOption) (*LoadCustomerResponse, error) {
+func (c *customerAPIServiceGRPCClient) Create(ctx context.Context, in *NewCustomerRequest, opts ...grpc.CallOption) (*LoadCustomerResponse, error) {
 	out := new(LoadCustomerResponse)
-	err := c.cc.Invoke(ctx, "/pb.CustomerAPIService/LoadByID", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.CustomerAPIServiceGRPC/Create", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *customerAPIServiceClient) LoadByEmail(ctx context.Context, in *LoadByEmailRequest, opts ...grpc.CallOption) (*LoadCustomerResponse, error) {
+func (c *customerAPIServiceGRPCClient) LoadByID(ctx context.Context, in *LoadByIDRequest, opts ...grpc.CallOption) (*LoadCustomerResponse, error) {
 	out := new(LoadCustomerResponse)
-	err := c.cc.Invoke(ctx, "/pb.CustomerAPIService/LoadByEmail", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.CustomerAPIServiceGRPC/LoadByID", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// CustomerAPIServiceServer is the server API for CustomerAPIService service.
-type CustomerAPIServiceServer interface {
-	Create(context.Context, *NewCustomerRequest) (*Error, error)
+func (c *customerAPIServiceGRPCClient) LoadByPhone(ctx context.Context, in *LoadByPhoneRequest, opts ...grpc.CallOption) (*LoadCustomerResponse, error) {
+	out := new(LoadCustomerResponse)
+	err := c.cc.Invoke(ctx, "/pb.CustomerAPIServiceGRPC/LoadByPhone", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *customerAPIServiceGRPCClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoadCustomerResponse, error) {
+	out := new(LoadCustomerResponse)
+	err := c.cc.Invoke(ctx, "/pb.CustomerAPIServiceGRPC/Login", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// CustomerAPIServiceGRPCServer is the server API for CustomerAPIServiceGRPC service.
+type CustomerAPIServiceGRPCServer interface {
+	Create(context.Context, *NewCustomerRequest) (*LoadCustomerResponse, error)
 	LoadByID(context.Context, *LoadByIDRequest) (*LoadCustomerResponse, error)
-	LoadByEmail(context.Context, *LoadByEmailRequest) (*LoadCustomerResponse, error)
+	LoadByPhone(context.Context, *LoadByPhoneRequest) (*LoadCustomerResponse, error)
+	Login(context.Context, *LoginRequest) (*LoadCustomerResponse, error)
 }
 
-func RegisterCustomerAPIServiceServer(s *grpc.Server, srv CustomerAPIServiceServer) {
-	s.RegisterService(&_CustomerAPIService_serviceDesc, srv)
+func RegisterCustomerAPIServiceGRPCServer(s *grpc.Server, srv CustomerAPIServiceGRPCServer) {
+	s.RegisterService(&_CustomerAPIServiceGRPC_serviceDesc, srv)
 }
 
-func _CustomerAPIService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CustomerAPIServiceGRPC_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(NewCustomerRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CustomerAPIServiceServer).Create(ctx, in)
+		return srv.(CustomerAPIServiceGRPCServer).Create(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.CustomerAPIService/Create",
+		FullMethod: "/pb.CustomerAPIServiceGRPC/Create",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CustomerAPIServiceServer).Create(ctx, req.(*NewCustomerRequest))
+		return srv.(CustomerAPIServiceGRPCServer).Create(ctx, req.(*NewCustomerRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CustomerAPIService_LoadByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CustomerAPIServiceGRPC_LoadByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LoadByIDRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CustomerAPIServiceServer).LoadByID(ctx, in)
+		return srv.(CustomerAPIServiceGRPCServer).LoadByID(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.CustomerAPIService/LoadByID",
+		FullMethod: "/pb.CustomerAPIServiceGRPC/LoadByID",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CustomerAPIServiceServer).LoadByID(ctx, req.(*LoadByIDRequest))
+		return srv.(CustomerAPIServiceGRPCServer).LoadByID(ctx, req.(*LoadByIDRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CustomerAPIService_LoadByEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LoadByEmailRequest)
+func _CustomerAPIServiceGRPC_LoadByPhone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoadByPhoneRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CustomerAPIServiceServer).LoadByEmail(ctx, in)
+		return srv.(CustomerAPIServiceGRPCServer).LoadByPhone(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.CustomerAPIService/LoadByEmail",
+		FullMethod: "/pb.CustomerAPIServiceGRPC/LoadByPhone",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CustomerAPIServiceServer).LoadByEmail(ctx, req.(*LoadByEmailRequest))
+		return srv.(CustomerAPIServiceGRPCServer).LoadByPhone(ctx, req.(*LoadByPhoneRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-var _CustomerAPIService_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "pb.CustomerAPIService",
-	HandlerType: (*CustomerAPIServiceServer)(nil),
+func _CustomerAPIServiceGRPC_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CustomerAPIServiceGRPCServer).Login(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.CustomerAPIServiceGRPC/Login",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CustomerAPIServiceGRPCServer).Login(ctx, req.(*LoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _CustomerAPIServiceGRPC_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "pb.CustomerAPIServiceGRPC",
+	HandlerType: (*CustomerAPIServiceGRPCServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Create",
-			Handler:    _CustomerAPIService_Create_Handler,
+			Handler:    _CustomerAPIServiceGRPC_Create_Handler,
 		},
 		{
 			MethodName: "LoadByID",
-			Handler:    _CustomerAPIService_LoadByID_Handler,
+			Handler:    _CustomerAPIServiceGRPC_LoadByID_Handler,
 		},
 		{
-			MethodName: "LoadByEmail",
-			Handler:    _CustomerAPIService_LoadByEmail_Handler,
+			MethodName: "LoadByPhone",
+			Handler:    _CustomerAPIServiceGRPC_LoadByPhone_Handler,
+		},
+		{
+			MethodName: "Login",
+			Handler:    _CustomerAPIServiceGRPC_Login_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

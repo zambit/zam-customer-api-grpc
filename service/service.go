@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"time"
 
 	"git.zam.io/microservices/customer-api/models"
@@ -8,11 +9,11 @@ import (
 )
 
 type ICustomerAPIService interface {
-	Health() bool
-	Create(req *CreateRequest, c *models.Customer) error
-	LoadByID(id uint64) (*models.Customer, error)
-	LoadByPhone(phone string) (*models.Customer, error)
-	Login(phone string, password string) (*models.Customer, error)
+	Health(ctx context.Context) bool
+	Create(ctx context.Context, req *CreateRequest, c *models.Customer) error
+	LoadByID(ctx context.Context, id uint64) (*models.Customer, error)
+	LoadByPhone(ctx context.Context, phone string) (*models.Customer, error)
+	Login(ctx context.Context, phone string, password string) (*models.Customer, error)
 }
 
 var _ ICustomerAPIService = (*CustomerAPIService)(nil)
@@ -21,7 +22,7 @@ type CustomerAPIService struct {
 	r Repository
 }
 
-func (i *CustomerAPIService) Login(phone string, password string) (*models.Customer, error) {
+func (i *CustomerAPIService) Login(ctx context.Context, phone string, password string) (*models.Customer, error) {
 	// obtain customer data
 	c := models.Customer{}
 	err := i.r.LoadByPhone(phone, &c)
@@ -38,7 +39,7 @@ func (i *CustomerAPIService) Login(phone string, password string) (*models.Custo
 	return &c, nil
 }
 
-func (i *CustomerAPIService) Create(req *CreateRequest, c *models.Customer) error {
+func (i *CustomerAPIService) Create(ctx context.Context, req *CreateRequest, c *models.Customer) error {
 	{
 		t := time.Now()
 		c.CreatedAt = t
@@ -64,11 +65,11 @@ func (i *CustomerAPIService) Create(req *CreateRequest, c *models.Customer) erro
 	return nil
 }
 
-func (i *CustomerAPIService) Health() bool {
+func (i *CustomerAPIService) Health(ctx context.Context) bool {
 	return true
 }
 
-func (i *CustomerAPIService) LoadByID(id uint64) (*models.Customer, error) {
+func (i *CustomerAPIService) LoadByID(ctx context.Context, id uint64) (*models.Customer, error) {
 	res := &models.Customer{}
 	err := i.r.LoadByID(id, res)
 	if err != nil {
@@ -77,7 +78,7 @@ func (i *CustomerAPIService) LoadByID(id uint64) (*models.Customer, error) {
 	return res, nil
 }
 
-func (i *CustomerAPIService) LoadByPhone(phone string) (*models.Customer, error) {
+func (i *CustomerAPIService) LoadByPhone(ctx context.Context, phone string) (*models.Customer, error) {
 	res := &models.Customer{}
 	err := i.r.LoadByPhone(phone, res)
 	if err != nil {

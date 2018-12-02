@@ -7,32 +7,39 @@ message LoadByIDRequest {
     uint64 id = 1;
 }
 
-message LoadByEmailRequest {
-    string email = 1;
+message LoadByPhoneRequest {
+    string phone = 1;
 }
 
 message LoadCustomerResponse {
     uint64 id = 1;
     string phone = 2;
     google.protobuf.Timestamp registereg_at = 3;
-    int32 status_id = 4;
-    google.protobuf.Timestamp created_at = 5;
-    google.protobuf.Timestamp updated_at = 6;
+    uint64 status_id = 4;
+    uint64 referrer_id = 5;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
 }
 
 message NewCustomerRequest {
     string phone = 1;
     string password = 2;
-    int32 status_id = 3;
+    int64 status_id = 3;
+    int64 referrer_id = 4;
 }
 
 message Error {
     string error = 1;
 }
 
-service CustomerAPIService {
-    rpc Create (NewCustomerRequest) returns (Error);
-    rpc LoadByID (LoadByIDRequest) returns (LoadCustomerResponse);
-    rpc LoadByEmail (LoadByEmailRequest) returns (LoadCustomerResponse);
+message LoginRequest {
+    string phone = 1;
+    string password = 2;
+}
 
+service CustomerAPIServiceGRPC {
+    rpc Create (NewCustomerRequest) returns (LoadCustomerResponse){}
+    rpc LoadByID (LoadByIDRequest) returns (LoadCustomerResponse){}
+    rpc LoadByPhone (LoadByPhoneRequest) returns (LoadCustomerResponse){}
+    rpc Login (LoginRequest) returns (LoadCustomerResponse) {}
 }

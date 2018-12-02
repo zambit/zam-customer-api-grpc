@@ -46,7 +46,7 @@ func (app *Application) init() error {
 }
 
 func (app *Application) Run() {
-	h := NewHTTPHandler(MakeServerEndpoints(&CustomerAPIService{}, app.logger), app.logger)
+	h := NewHTTPServer(MakeServerEndpoints(&CustomerAPIService{}, app.logger), app.logger)
 
 	// run HTTP-server
 	go func() {
@@ -65,7 +65,11 @@ func (app *Application) Run() {
 		}
 
 		gRPCServer := grpc.NewServer()
-		pb.RegisterCustomerAPIServiceServer(gRPCServer, &CustomerAPIService{})
+		pb.RegisterCustomerAPIServiceGRPCServer(gRPCServer, &CustomerAPIGRPCServer{})
+		err = gRPCServer.Serve(listener)
+		if err != nil {
+			os.Exit(1)
+		}
 	}()
 
 	sigs := make(chan os.Signal, 1)

@@ -10,7 +10,7 @@ import (
 	httptransport "github.com/go-kit/kit/transport/http"
 )
 
-func NewHTTPHandler(endpoints Endpoints, logger log.Logger) http.Handler {
+func NewHTTPServer(endpoints Endpoints, logger log.Logger) http.Handler {
 	m := chi.NewMux()
 
 	options := []httptransport.ServerOption{
