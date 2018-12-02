@@ -17,18 +17,7 @@ func grpcDecodeLoginRequest(_ context.Context, r interface{}) (interface{}, erro
 
 func encodeGRPCLoginResponse(_ context.Context, response interface{}) (interface{}, error) {
 	res := response.(LoginResponse)
-	registeredAt, _ := ptypes.TimestampProto(res.Customer.RegisteredAt)
-	createdAt, _ := ptypes.TimestampProto(res.Customer.CreatedAt)
-	updatedAt, _ := ptypes.TimestampProto(res.Customer.UpdatedAt)
-	return &pb.LoadCustomerResponse{
-		Id:           res.Customer.ID,
-		Phone:        res.Customer.Phone,
-		StatusId:     res.Customer.StatusID,
-		ReferrerId:   res.Customer.ReferrerID,
-		RegisteregAt: registeredAt,
-		CreatedAt:    createdAt,
-		UpdatedAt:    updatedAt,
-	}, res.Error
+	return convert(&res.Customer), res.Error
 }
 
 func convert(httpCustomer *models.Customer) *pb.LoadCustomerResponse {

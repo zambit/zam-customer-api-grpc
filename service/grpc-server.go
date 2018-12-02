@@ -12,6 +12,7 @@ import (
 type CustomerAPIGRPCServer struct {
 	login       grpctransport.Handler
 	loadByPhone grpctransport.Handler
+	loadByID    grpctransport.Handler
 }
 
 func NewGRPCServer(endpoints Endpoints, logger log.Logger) pb.CustomerAPIServiceGRPCServer {
@@ -21,6 +22,7 @@ func NewGRPCServer(endpoints Endpoints, logger log.Logger) pb.CustomerAPIService
 
 	return &CustomerAPIGRPCServer{
 		login: grpctransport.NewServer(endpoints.Login, grpcDecodeLoginRequest, encodeGRPCLoginResponse, options...),
+		//loadByPhone: grpctransport.NewServer(endpoints.LoadByPhone, grpcDecodeL, encodeGRPCLoginResponse, options...),
 	}
 }
 
@@ -29,7 +31,11 @@ func (s *CustomerAPIGRPCServer) Create(ctx context.Context, r *pb.NewCustomerReq
 }
 
 func (s *CustomerAPIGRPCServer) LoadByID(ctx context.Context, r *pb.LoadByIDRequest) (*pb.LoadCustomerResponse, error) {
-	panic("implement me")
+	_, res, err := s.loadByID.ServeGRPC(ctx, r)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.LoadCustomerResponse), nil
 }
 
 func (s *CustomerAPIGRPCServer) LoadByPhone(ctx context.Context, r *pb.LoadByPhoneRequest) (*pb.LoadCustomerResponse, error) {

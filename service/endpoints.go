@@ -130,14 +130,14 @@ func MakeServerEndpoints(s *CustomerAPIService, logger log.Logger) Endpoints {
 	var endpLogin endpoint.Endpoint
 	{
 		endpLogin = makeLoginEndpoint(s)
-		endpLogin = LoggingMiddleware(log.With(logger, "method", "Create"))(endpLogin)
+		endpLogin = LoggingMiddleware(log.With(logger, "method", "Login"))(endpLogin)
 	}
 
 	return Endpoints{
-		Health:      endpHealth,
-		LoadByID:    endpLoadByID,
-		LoadByPhone: endpLoadByPhone,
-		Create:      endpCreate,
+		Health:      &endpHealth,
+		LoadByID:    &endpLoadByID,
+		LoadByPhone: &endpLoadByPhone,
+		Create:      &endpCreate,
 		Login:       endpLogin,
 	}
 }
