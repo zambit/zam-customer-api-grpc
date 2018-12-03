@@ -90,15 +90,15 @@ func makeLoginEndpoint(i ICustomerAPIService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(LoginRequest)
 		c, err := i.Login(ctx, req.Phone, req.Password)
-		return CreateResponse{Customer: *c, Error: err}, err
+		return LoginResponse{Customer: *c, Error: err}, err
 	}
 }
 
 type Endpoints struct {
-	Health      *endpoint.Endpoint
-	LoadByID    *endpoint.Endpoint
-	LoadByPhone *endpoint.Endpoint
-	Create      *endpoint.Endpoint
+	Health      endpoint.Endpoint
+	LoadByID    endpoint.Endpoint
+	LoadByPhone endpoint.Endpoint
+	Create      endpoint.Endpoint
 	Login       endpoint.Endpoint
 }
 
@@ -134,10 +134,10 @@ func MakeServerEndpoints(s *CustomerAPIService, logger log.Logger) Endpoints {
 	}
 
 	return Endpoints{
-		Health:      &endpHealth,
-		LoadByID:    &endpLoadByID,
-		LoadByPhone: &endpLoadByPhone,
-		Create:      &endpCreate,
+		Health:      endpHealth,
+		LoadByID:    endpLoadByID,
+		LoadByPhone: endpLoadByPhone,
+		Create:      endpCreate,
 		Login:       endpLogin,
 	}
 }

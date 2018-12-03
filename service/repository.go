@@ -33,8 +33,7 @@ func (Repository) LoadByID(id uint64, buf *models.Customer) error {
 }
 
 func (Repository) LoadByPhone(phone string, buf *models.Customer) error {
-	buf.Phone = phone
-	err := db.DB().Model(&buf).Select()
+	err := db.DB().Model(buf).Where("phone = ?", phone).Select()
 	if err != nil {
 		return err
 	}

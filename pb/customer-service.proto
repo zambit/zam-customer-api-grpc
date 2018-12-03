@@ -24,8 +24,8 @@ message LoadCustomerResponse {
 message NewCustomerRequest {
     string phone = 1;
     string password = 2;
-    int64 status_id = 3;
-    int64 referrer_id = 4;
+    uint64 status_id = 3;
+    uint64 referrer_id = 4;
 }
 
 message Error {

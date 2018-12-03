@@ -13,6 +13,7 @@ type CustomerAPIGRPCServer struct {
 	login       grpctransport.Handler
 	loadByPhone grpctransport.Handler
 	loadByID    grpctransport.Handler
+	create      grpctransport.Handler
 }
 
 func NewGRPCServer(endpoints Endpoints, logger log.Logger) pb.CustomerAPIServiceGRPCServer {
@@ -21,13 +22,19 @@ func NewGRPCServer(endpoints Endpoints, logger log.Logger) pb.CustomerAPIService
 	}
 
 	return &CustomerAPIGRPCServer{
-		login: grpctransport.NewServer(endpoints.Login, grpcDecodeLoginRequest, encodeGRPCLoginResponse, options...),
-		//loadByPhone: grpctransport.NewServer(endpoints.LoadByPhone, grpcDecodeL, encodeGRPCLoginResponse, options...),
+		login:       grpctransport.NewServer(endpoints.Login, grpcDecodeLoginRequest, grpcEncodeLoginResponse, options...),
+		loadByID:    grpctransport.NewServer(endpoints.LoadByID, grpcDecodeLoadByIDRequest, grpcEncodeLoadByIDResponse, options...),
+		loadByPhone: grpctransport.NewServer(endpoints.LoadByPhone, grpcDecodeLoadByPhoneRequest, grpcEncodeLoginResponse, options...),
+		create:      grpctransport.NewServer(endpoints.Create, grpcDecodeCreateRequest, grpcEncodeCreateRequest, options...),
 	}
 }
 
 func (s *CustomerAPIGRPCServer) Create(ctx context.Context, r *pb.NewCustomerRequest) (*pb.LoadCustomerResponse, error) {
-	panic("implement me")
+	_, res, err := s.create.ServeGRPC(ctx, r)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.LoadCustomerResponse), nil
 }
 
 func (s *CustomerAPIGRPCServer) LoadByID(ctx context.Context, r *pb.LoadByIDRequest) (*pb.LoadCustomerResponse, error) {

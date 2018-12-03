@@ -46,7 +46,9 @@ func (app *Application) init() error {
 }
 
 func (app *Application) Run() {
-	h := NewHTTPServer(MakeServerEndpoints(&CustomerAPIService{}, app.logger), app.logger)
+	service := &CustomerAPIService{}
+	endpoints := MakeServerEndpoints(service, app.logger)
+	h := NewHTTPServer(endpoints, app.logger)
 
 	// run HTTP-server
 	go func() {
@@ -58,14 +60,15 @@ func (app *Application) Run() {
 
 	// run GRPC-server
 	go func() {
-		listener, err := net.Listen("tcp", config.Config().GetString(config.Config().GetString("application.host")+":"+config.Config().GetString("application.grpc.port")))
+		//listener, err := net.Listen("tcp", config.Config().GetString(config.Config().GetString("application.host")+":"+config.Config().GetString("application.grpc.port")))
+		listener, err := net.Listen("tcp", ":3001")
 		if err != nil {
 			app.logger.Log(err)
 			os.Exit(1)
 		}
 
 		gRPCServer := grpc.NewServer()
-		pb.RegisterCustomerAPIServiceGRPCServer(gRPCServer, &CustomerAPIGRPCServer{})
+		pb.RegisterCustomerAPIServiceGRPCServer(gRPCServer, NewGRPCServer(endpoints, app.logger))
 		err = gRPCServer.Serve(listener)
 		if err != nil {
 			os.Exit(1)

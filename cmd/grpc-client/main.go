@@ -11,7 +11,7 @@ import (
 
 func main() {
 	// Set up a connection to the server.
-	conn, err := grpc.Dial("localhost:3001", grpc.WithInsecure())
+	conn, err := grpc.Dial("127.0.0.1:3001", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
@@ -20,11 +20,11 @@ func main() {
 
 	// Contact the server and print out its response.
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
-	r, err := c.Login(ctx, &pb.LoginRequest{Phone: "+79661861871"})
+	r, err := c.Login(ctx, &pb.LoginRequest{Phone: "+79661861871", Password: "12345"})
 	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+		log.Fatalf("could not login: %v", err)
 	}
 	log.Printf("Greeting: %#v", r)
 
