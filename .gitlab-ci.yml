@@ -1,0 +1,147 @@
+stages:
+  - build_docs
+  - build
+  - test
+  - deploy
+variables:
+  PROJECT_GO_PATH: git.zam.io/wallet-backend/wallet-api
+  EXECUTABLE_ENTRY_POINT: cmd/main/main.go
+  EXECUTABLE_NAME: wallet-api
+#============
+# COMMON PART
+#============
+build:
+  stage: build
+  variables:
+    GOROOT: /usr/lib/go/
+    GOPATH: /var/opt/golang
+    BUILD_OUT_DIR: $CI_PROJECT_DIR/build
+    DEP_LOCK_FILE: glide.lock
+  cache:
+    key: build_$CI_COMMIT_REF_NAME
+    paths:
+    - vendor
+  script:
+    # prepare go-env
+    - export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+    - export OLDGOPATH=$GOPATH
+    - export GOPATH=`pwd`
+    - mkdir -p $BUILD_OUT_DIR
+    # copy all files into go-style path
+    - mkdir -p vendor
+    - mkdir -p .src/$PROJECT_GO_PATH
+    - cp -r * .src/$PROJECT_GO_PATH
+    - "[ -f vendor/$DEP_LOCK_FILE ] && cp vendor/$DEP_LOCK_FILE .src/$PROJECT_GO_PATH/"
+    - mv .src src
+    - cd src/$PROJECT_GO_PATH
+    # install dependencies
+    - git config --global user.email "$GITLAB_USER_EMAIL"
+    - git config --global user.name "$GITLAB_USER_NAME"
+    - glide --debug up
+    # build tests if they are present
+    - tests_query=$( find -name '*_test.go | grep -v vendor' )
+    - '[ ! -z "$tests_query" ] && ginkgo build -r .'
+    - mkdir -p $BUILD_OUT_DIR/tests
+    - '[ ! -z "$tests_query" ] && cp `find -name *.test` $BUILD_OUT_DIR/tests'
+    # build binary into artifact
+    - go build -ldflags="-X main.commitSHA=$CI_COMMIT_SHA -X main.commitRef=$CI_COMMIT_REF_NAME -X main.commitRep=$CI_REPOSITORY_URL -X main.commitEnv=$CI_ENVIRONMENT_NAME -X main.commitPipID=$CI_PIPELINE_ID" -o $BUILD_OUT_DIR/$EXECUTABLE_NAME $EXECUTABLE_ENTRY_POINT
+    # copy migrations
+    - mkdir -p $BUILD_OUT_DIR/migrations
+    - cp db/migrations/* $BUILD_OUT_DIR/migrations
+    # copy config generator
+    - cp config_generator.sh $BUILD_OUT_DIR
+    # cache vendor path
+    - cp $DEP_LOCK_FILE $CI_PROJECT_DIR/vendor/
+    - cp -r vendor/* $CI_PROJECT_DIR/vendor/
+  tags:
+    - build_srv
+  artifacts:
+    paths:
+      - build
+# docs_build job build docs from swagger specs
+docs_build:
+  stage: build_docs
+  variables:
+    OUT_FILE_NAME: $CI_COMMIT_REF_NAME.json
+  script:
+    - mkdir -p docs
+    - npm install swagger-cli
+    - ./node_modules/swagger-cli/bin/swagger-cli.js bundle docs/api/index.yaml > $OUT_FILE_NAME
+    - cp $OUT_FILE_NAME docs/
+  tags:
+    - build_srv
+  artifacts:
+    paths:
+      - docs
+  cache:
+    key: node_modules
+    paths:
+      - node_modules/
+test:
+  stage: test
+  script:
+    # export variables used by test to lookup migrations and db
+    - export WA_DB_URI=$TESTING_DB_URI
+    - export WA_MIGRATIONS_DIR=build/migrations
+    # run them sequentially break if any of them failed
+    - bash -c 'for TEST in $(find -name *.test); do ./$TEST; if [ $? -ne 0 ]; then break; fi; done'
+  tags:
+    - testing_srv
+  dependencies:
+    - build
+# deploy_production_build job copies build into production artifacts directory only for production branch with tag
+deploy_production_build:
+  stage: deploy
+  variables:
+    DEPLOY_DIR: $PRODUCTION_BUILDS_DIR/$EXECUTABLE_NAME/$CI_COMMIT_TAG
+  script:
+    - echo $DEPLOY_DIR
+    - mkdir -p $DEPLOY_DIR
+    - cp -r build/* $DEPLOY_DIR/
+  tags:
+    - build_srv
+  only:
+    - /^v.*$/
+  # HACK (avoiding lack of AND expression in `only` block) use negative lookahead to make all (except production)
+  # branches unsuitable for this job
+  except:
+    - /^(?!production).+@/
+  artifacts:
+    paths:
+    - build
+deploy_on_staging:
+  stage: deploy
+  variables:
+    DEPLOY_DIR: $STAGING_DEPLOY_DIR/$EXECUTABLE_NAME
+  script:
+    # remove outdated binary and copy new one
+    - mkdir -p $DEPLOY_DIR
+    - rm -f $DEPLOY_DIR/$EXECUTABLE_NAME
+    - cp build/$EXECUTABLE_NAME $DEPLOY_DIR
+    - cp build/config_generator.sh $DEPLOY_DIR
+    - cp -r build/migrations $DEPLOY_DIR
+    # generate config
+    - cd $DEPLOY_DIR
+    - bash config_generator.sh > conf.yaml
+    # trigger systemd to restart service by softly killing old instance
+    - killall -1 $EXECUTABLE_NAME
+  only:
+    - master
+  tags:
+    - testing_srv
+docs_deploy_on_staging:
+  stage: deploy
+  variables:
+    DEPLOY_DIR: $STAGING_DEPLOY_DIR/docs/$EXECUTABLE_NAME/
+    OUT_FILE_NAME: $CI_COMMIT_REF_NAME.json
+  script:
+    - mkdir -p $DEPLOY_DIR
+    - cp docs/$OUT_FILE_NAME $DEPLOY_DIR
+  tags:
+    - testing_srv
+  artifacts:
+    paths:
+      - docs
+  only:
+    - master
+    - development
