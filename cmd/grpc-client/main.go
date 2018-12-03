@@ -22,7 +22,7 @@ func main() {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := c.Login(ctx, &pb.LoginRequest{Id: 5})
+	r, err := c.Login(ctx, &pb.LoginRequest{Phone: "+79661861871"})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}

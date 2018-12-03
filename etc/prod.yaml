@@ -1,0 +1,19 @@
+application:
+  host: "localhost"
+  http:
+    enabled: true
+    port: 3000
+  grpc:
+    enabled: true
+    port: 3001
+
+database:
+  address: "sandbox:5432"
+  user: "customer_api"
+  password: "12345"
+  database: "customer_api"
+
+consul:
+  host: "127.0.0.1"
+  port: 8500
+
