@@ -18,7 +18,7 @@ func NewHTTPServer(endpoints Endpoints, logger log.Logger) http.Handler {
 
 	m.Method(http.MethodGet, "/health", httptransport.NewServer(endpoints.Health, httpDecodeHealthRequest, httpEncodeHealthResponse, options...))
 	m.Method(http.MethodPost, "/load-by-id", httptransport.NewServer(endpoints.LoadByID, httpDecodeLoadByIDRequest, httpEncodeLoadByIDResponse, options...))
-	m.Method(http.MethodPost, "/loadbyphone", httptransport.NewServer(endpoints.LoadByPhone, httpDecodeLoadByPhoneRequest, httpEncodeLoadByPhoneResponse, options...))
+	m.Method(http.MethodPost, "/load-by-phone", httptransport.NewServer(endpoints.LoadByPhone, httpDecodeLoadByPhoneRequest, httpEncodeLoadByPhoneResponse, options...))
 	m.Method(http.MethodPost, "/create", httptransport.NewServer(endpoints.Create, httpDecodeCreateRequest, httpEncodeCreateResponse, options...))
 	m.Method(http.MethodPost, "/login", httptransport.NewServer(endpoints.Login, httpDecodeLoginRequest, httpEncodeLoginResponse, options...))
 
