@@ -41,8 +41,12 @@ func ConsulRegister() (registar sd.Registrar) {
 		Notes:    "Customer API health checks",
 	}
 
+	hostname, err := os.Hostname()
+	if err != nil {
+		hostname = uuid.NewV4().String()
+	}
 	asr := api.AgentServiceRegistration{
-		ID:      "customer-api-" + uuid.NewV4().String(), // unique service ID
+		ID:      "customer-api-" + hostname, // unique service ID
 		Name:    "customer-api",
 		Address: "http://" + config.Config().GetString("application.host"),
 		Port:    config.Config().GetInt("application.http.port"),
