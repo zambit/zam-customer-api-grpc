@@ -54,6 +54,7 @@ build:
   artifacts:
     paths:
       - build
+      
 # deploy_production_build job copies build into production artifacts directory only for production branch with tag
 deploy_production_build:
   stage: deploy
@@ -74,6 +75,7 @@ deploy_production_build:
   artifacts:
     paths:
     - build
+    
 deploy_on_staging:
   stage: deploy
   variables:
