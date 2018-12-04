@@ -28,3 +28,8 @@ func DB() *pg.DB {
 	})
 	return db
 }
+
+func CheckDB() error {
+	_, err := DB().Exec("SELECT 1")
+	return err
+}

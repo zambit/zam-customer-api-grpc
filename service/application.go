@@ -7,6 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"git.zam.io/microservices/customer-api/pkg/db"
+
 	"git.zam.io/microservices/customer-api/pb"
 	"git.zam.io/microservices/customer-api/pkg/config"
 	"google.golang.org/grpc"
@@ -31,6 +33,11 @@ func New() (*Application, error) {
 }
 
 func (app *Application) init() error {
+	err := db.CheckDB()
+	if err != nil {
+		return err
+	}
+
 	app.server = &http.Server{}
 	{
 		app.logger = log.NewLogfmtLogger(os.Stderr)
