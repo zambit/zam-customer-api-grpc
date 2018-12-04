@@ -45,7 +45,7 @@ build:
     - go build -ldflags="-X main.commitSHA=$CI_COMMIT_SHA -X main.commitRef=$CI_COMMIT_REF_NAME -X main.commitRep=$CI_REPOSITORY_URL -X main.commitEnv=$CI_ENVIRONMENT_NAME -X main.commitPipID=$CI_PIPELINE_ID" -o $BUILD_OUT_DIR/$EXECUTABLE_NAME $EXECUTABLE_ENTRY_POINT
     # copy migrations
     - mkdir -p $BUILD_OUT_DIR/migrations
-    - cp db/migrations/* $BUILD_OUT_DIR/migrations
+    - cp pkg/db/migrations/* $BUILD_OUT_DIR/migrations
     # copy config generator
     - cp config_generator.sh $BUILD_OUT_DIR
     # cache vendor path
