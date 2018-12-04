@@ -3,7 +3,7 @@ stages:
    - deploy
 variables:
   PROJECT_GO_PATH: git.zam.io/microservices/customer-api
-  EXECUTABLE_ENTRY_POINT: cmd/main/main.go
+  EXECUTABLE_ENTRY_POINT: cmd/customer-api.go
   EXECUTABLE_NAME: customer-api
 #============
 # COMMON PART
