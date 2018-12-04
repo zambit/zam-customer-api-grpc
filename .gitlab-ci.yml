@@ -1,12 +1,10 @@
 stages:
-  - build_docs
-  - build
-  - test
-  - deploy
+   - build
+   - deploy
 variables:
-  PROJECT_GO_PATH: git.zam.io/wallet-backend/wallet-api
+  PROJECT_GO_PATH: git.zam.io/microservices/customer-api
   EXECUTABLE_ENTRY_POINT: cmd/main/main.go
-  EXECUTABLE_NAME: wallet-api
+  EXECUTABLE_NAME: customer-api
 #============
 # COMMON PART
 #============
@@ -58,37 +56,6 @@ build:
   artifacts:
     paths:
       - build
-# docs_build job build docs from swagger specs
-docs_build:
-  stage: build_docs
-  variables:
-    OUT_FILE_NAME: $CI_COMMIT_REF_NAME.json
-  script:
-    - mkdir -p docs
-    - npm install swagger-cli
-    - ./node_modules/swagger-cli/bin/swagger-cli.js bundle docs/api/index.yaml > $OUT_FILE_NAME
-    - cp $OUT_FILE_NAME docs/
-  tags:
-    - build_srv
-  artifacts:
-    paths:
-      - docs
-  cache:
-    key: node_modules
-    paths:
-      - node_modules/
-test:
-  stage: test
-  script:
-    # export variables used by test to lookup migrations and db
-    - export WA_DB_URI=$TESTING_DB_URI
-    - export WA_MIGRATIONS_DIR=build/migrations
-    # run them sequentially break if any of them failed
-    - bash -c 'for TEST in $(find -name *.test); do ./$TEST; if [ $? -ne 0 ]; then break; fi; done'
-  tags:
-    - testing_srv
-  dependencies:
-    - build
 # deploy_production_build job copies build into production artifacts directory only for production branch with tag
 deploy_production_build:
   stage: deploy
@@ -129,19 +96,3 @@ deploy_on_staging:
     - master
   tags:
     - testing_srv
-docs_deploy_on_staging:
-  stage: deploy
-  variables:
-    DEPLOY_DIR: $STAGING_DEPLOY_DIR/docs/$EXECUTABLE_NAME/
-    OUT_FILE_NAME: $CI_COMMIT_REF_NAME.json
-  script:
-    - mkdir -p $DEPLOY_DIR
-    - cp docs/$OUT_FILE_NAME $DEPLOY_DIR
-  tags:
-    - testing_srv
-  artifacts:
-    paths:
-      - docs
-  only:
-    - master
-    - development
