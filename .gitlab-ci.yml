@@ -91,6 +91,7 @@ deploy_on_staging:
     - cp build/config_generator.sh $DEPLOY_DIR
     # generate config
     - cd $DEPLOY_DIR
+    - echo $APPLICATION_HTTP_ENABLED
     - bash config_generator.sh > stage.yaml
   only:
     - master
