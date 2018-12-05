@@ -46,6 +46,8 @@ build:
     # copy migrations
     - mkdir -p $BUILD_OUT_DIR/migrations
     - cp pkg/db/migrations/* $BUILD_OUT_DIR/migrations
+    # copy config generator
+    - cp config_generator.sh $BUILD_OUT_DIR
     # cache vendor path
     - cp $DEP_LOCK_FILE $CI_PROJECT_DIR/vendor/
     - cp -r vendor/* $CI_PROJECT_DIR/vendor/
@@ -86,6 +88,9 @@ deploy_on_staging:
     - rm -f $DEPLOY_DIR/$EXECUTABLE_NAME
     - cp build/$EXECUTABLE_NAME $DEPLOY_DIR
     - cp -r build/migrations $DEPLOY_DIR
+    # generate config
+    - cd $DEPLOY_DIR
+    - bash config_generator.sh > stage.yaml
   only:
     - master
   tags:
