@@ -88,6 +88,7 @@ deploy_on_staging:
     - rm -f $DEPLOY_DIR/$EXECUTABLE_NAME
     - cp build/$EXECUTABLE_NAME $DEPLOY_DIR
     - cp -r build/migrations $DEPLOY_DIR
+    - cp build/config_generator.sh $DEPLOY_DIR
     # generate config
     - cd $DEPLOY_DIR
     - bash config_generator.sh > stage.yaml
